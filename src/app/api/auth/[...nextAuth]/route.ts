@@ -1,3 +1,3 @@
-// import Auth from "@/lib/auth";
+import { handler } from "@/lib/auth";
 
-// export {GET, POST } = Auth.handlers;
+export { handler as GET, handler as POST };

@@ -1,10 +1,11 @@
-"use server";
+// "use server";
 import { z } from "zod";
+import { signIn } from "next-auth/react";
 
-const testUser = {
-	email: "pkeen7@gmail.com",
-	password: "abcd",
-};
+// const testUser = {
+// 	email: "pkeen7@gmail.com",
+// 	password: "abcd",
+// };
 
 const loginSchema = z.object({
 	email: z.string().email({ message: "Email address invalid" }),
@@ -23,7 +24,7 @@ const responseSchema = z.object({
 		.object({
 			email: z.array(z.string()).optional(),
 			password: z.array(z.string()).optional(),
-            db: z.string().optional(),
+			db: z.string().optional(),
 		})
 		.optional(),
 });
@@ -38,8 +39,7 @@ export const login = async (previous: unknown, formData: FormData) => {
 	const result = loginSchema.safeParse(data);
 	console.log(result);
 
-
-    // validation
+	// validation
 	if (!result.success) {
 		// Extract errors from result.error
 		const fieldErrors = result.error.flatten().fieldErrors;
@@ -52,26 +52,49 @@ export const login = async (previous: unknown, formData: FormData) => {
 		};
 		console.log(response);
 		return response;
-	} else {
-        // Example: Check if user exists in database
-        if (data.email !== testUser.email || data.password !== testUser.password) {
-            const response: response = {
-                message: "Email or password incorrect",
-                data: data,
-                errors: {
-                    db: "Email or password incorrect",
-                }
-            };
-            console.log(response);
-            return response;
-        } else {
-            // user found - return user
-            const response: response = {
-                message: "Validation passed",
-                data: data,
-            };
-            console.log(response);
-            return response;
-        }
 	}
+	// Example: Check if user exists in database
+	// bypass this and go to authorize function
+	// if (
+	// 	data.email !== testUser.email ||
+	// 	data.password !== testUser.password
+	// ) {
+	// 	const response: response = {
+	// 		message: "Email or password incorrect",
+	// 		data: data,
+	// 		errors: {
+	// 			db: "Email or password incorrect",
+	// 		},
+	// 	};
+	// 	console.log(response);
+	// 	return response;
+	// } else {
+	// user found - return user
+
+    // send data to authorize function 
+	const user = await signIn("credentials", {
+		redirect: false,
+		email: data.email,
+		password: data.password,
+	});
+
+    /* Server api version */
+    // const baseUrl = process.env.NEXTAUTH_URL;
+
+    // const user = await fetch(`${baseUrl}/api/auth/sigin/credentials`, {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(data),
+    // });
+    
+
+
+	console.log("user:", user);
+	// const response: response = {
+	// 	message: "Validation passed",
+	// 	data: data,
+	// };
+	// console.log(response);
+	// return response;
+	// }
 };
