@@ -7,7 +7,6 @@ export default function LoginForm() {
 
 	return (
 		<form action={action} className="space-y-4">
-			``
 			<div>
 				<label
 					htmlFor="email"
@@ -23,6 +22,12 @@ export default function LoginForm() {
 					required
 					className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-700"
 				/>
+				{data?.errors?.email &&
+					data.errors.email.map((error) => (
+						<p key={error} className="text-red-500">
+							{error}
+						</p>
+					))}
 			</div>
 			<div>
 				<label
@@ -39,8 +44,13 @@ export default function LoginForm() {
 					required
 					className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-700"
 				/>
+				{data?.errors?.password &&
+					data.errors.password.map((error) => (
+						<p key={error} className="text-red-500">
+							{error}
+						</p>
+					))}
 			</div>
-			{/* error && <p className="text-red-500">{error}</p> */}
 			<button
 				type="submit"
 				disabled={isPending}
