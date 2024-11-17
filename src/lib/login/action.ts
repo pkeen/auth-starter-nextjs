@@ -1,5 +1,4 @@
 "use server";
-import { error } from "console";
 import { z } from "zod";
 
 const testUser = {
@@ -24,6 +23,7 @@ const responseSchema = z.object({
 		.object({
 			email: z.array(z.string()).optional(),
 			password: z.array(z.string()).optional(),
+            db: z.string().optional(),
 		})
 		.optional(),
 });
@@ -38,6 +38,8 @@ export const login = async (previous: unknown, formData: FormData) => {
 	const result = loginSchema.safeParse(data);
 	console.log(result);
 
+
+    // validation
 	if (!result.success) {
 		// Extract errors from result.error
 		const fieldErrors = result.error.flatten().fieldErrors;
@@ -51,11 +53,25 @@ export const login = async (previous: unknown, formData: FormData) => {
 		console.log(response);
 		return response;
 	} else {
-		const response: response = {
-			message: "Validation passed",
-			data: data,
-		};
-		console.log(response);
-		return response;
+        // Example: Check if user exists in database
+        if (data.email !== testUser.email || data.password !== testUser.password) {
+            const response: response = {
+                message: "Email or password incorrect",
+                data: data,
+                errors: {
+                    db: "Email or password incorrect",
+                }
+            };
+            console.log(response);
+            return response;
+        } else {
+            // user found - return user
+            const response: response = {
+                message: "Validation passed",
+                data: data,
+            };
+            console.log(response);
+            return response;
+        }
 	}
 };

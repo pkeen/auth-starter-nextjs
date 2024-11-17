@@ -58,6 +58,9 @@ export default function LoginForm() {
 			>
 				{!isPending ? "Sign in" : "Signing in..."}
 			</button>
+			{data?.errors?.db && (
+				<p className="text-red-500">{data.errors.db}</p>
+			)}
 		</form>
 	);
 }
