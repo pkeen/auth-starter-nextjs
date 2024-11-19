@@ -1,19 +1,18 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import test from "node:test";
-// import bcrypt from "bcrypt";
-// import { db } from "@/lib/db";
-// import { users } from "@/lib/db/schema";
+import { verifyPassword, hashPassword } from "./utils/password";
 // I'm thinking move that logic out of the authorize function and into a separate function that can be tested independently.
 
-const testUser = {
+const testPassword = "12345678";
+
+let testUser = {
 	id: "1",
 	name: "Peter Keen",
 	email: "pkeen7@gmail.com",
 	password: "12345678",
 };
 
-export const handler = NextAuth({
+const authConfig: NextAuthConfig = {
 	providers: [
 		CredentialsProvider({
 			name: "Credentials",
@@ -24,25 +23,50 @@ export const handler = NextAuth({
 			},
 			authorize: async (credentials, req) => {
 				console.log("Authorize called with:", credentials?.email);
-
 				const { email, password } = credentials || {};
 
-				console.log("password: ", password);
+				// first hash the test password
+				testUser.password = await hashPassword(testPassword);
 
-				if (email === testUser.email) {
-					console.log("email matches");
+				try {
+					// verify user exist with given email
+					const user = email === testUser.email ? testUser : null;
+					if (!user) {
+						throw new Error("No user found");
+					}
+					const isValid = await verifyPassword(
+						password as string,
+						user.password
+					);
+					if (!isValid) {
+						throw new Error("Invalid password");
+					}
+					console.log("User logged in successfully");
+					return user;
+				} catch (error) {
+					console.error(
+						"Error authorizing user, unkown error:",
+						error
+					);
+					return null;
 				}
 
-				if (password === testUser.password) {
-					console.log("password matches");
-				}
+				// console.log("password: ", password);
 
-				const user =
-					email === testUser.email && password === testUser.password
-						? testUser
-						: null;
+				// if (email === testUser.email) {
+				// 	console.log("email matches");
+				// }
 
-				return user;
+				// if (password === testUser.password) {
+				// 	console.log("password matches");
+				// }
+
+				// const user =
+				// 	email === testUser.email && password === testUser.password
+				// 		? testUser
+				// 		: null;
+
+				// return user;
 
 				// Add logic here to look up the user from the credentials supplied
 				// Check credentials against your database or an external service
@@ -89,4 +113,6 @@ export const handler = NextAuth({
 	// 	},
 	// },
 	secret: process.env.AUTH_SECRET,
-});
+};
+
+export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);

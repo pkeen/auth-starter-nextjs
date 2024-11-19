@@ -1,8 +1,6 @@
 /* Validate the field on Log in form
     Return a useable response object
 */
-
-"use client";
 import { z } from "zod";
 
 // Zod schema for login form data

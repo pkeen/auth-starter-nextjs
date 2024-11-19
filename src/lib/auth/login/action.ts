@@ -1,6 +1,6 @@
-// "use server";
-import { signIn } from "next-auth/react";
+"use server";
 import { validate, response, data } from "./validate";
+import { signIn } from "@/auth";
 
 export const login = async (previous: unknown, formData: FormData) => {
 	const data = Object.fromEntries(formData) as data;
@@ -13,26 +13,19 @@ export const login = async (previous: unknown, formData: FormData) => {
 	}
 
 	// SEND DATA TO AUTHORIZE FUNCTION DEFINED IN AUTH
-	const auth = await signIn("credentials", {
-		redirect: false,
-		email: data.email,
-		password: data.password,
-	});
-
-	// check if res is ok
-	if (!auth?.ok) {
+	try {
+		const user = await signIn("credentials", {
+			redirect: false,
+			email: data.email,
+			password: data.password,
+		});
+	} catch (err) {
 		result = {
 			...result,
 			authorized: false,
 			errors: {
 				db: "Email or password incorrect",
 			},
-		};
-		return result;
-	} else {
-		result = {
-			...result,
-			authorized: true,
 		};
 		return result;
 	}
