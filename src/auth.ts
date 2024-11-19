@@ -1,9 +1,16 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword, hashPassword } from "./utils/password";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import db from "@/lib/db";
+import {
+	users,
+	accounts,
+	sessions,
+	verificationTokens,
+	authenticators,
+} from "@/lib/db/schema/user";
 // I'm thinking move that logic out of the authorize function and into a separate function that can be tested independently.
-
-const testPassword = "12345678";
 
 let testUser = {
 	id: "1",
@@ -13,6 +20,13 @@ let testUser = {
 };
 
 const authConfig: NextAuthConfig = {
+	adapter: DrizzleAdapter(db, {
+		usersTable: users,
+		accountsTable: accounts,
+		sessionsTable: sessions,
+		verificationTokensTable: verificationTokens,
+		authenticatorsTable: authenticators,
+	}),
 	providers: [
 		CredentialsProvider({
 			name: "Credentials",
@@ -26,7 +40,7 @@ const authConfig: NextAuthConfig = {
 				const { email, password } = credentials || {};
 
 				// first hash the test password
-				testUser.password = await hashPassword(testPassword);
+				testUser.password = await hashPassword(testUser.password);
 
 				try {
 					// verify user exist with given email
@@ -50,53 +64,7 @@ const authConfig: NextAuthConfig = {
 					);
 					return null;
 				}
-
-				// console.log("password: ", password);
-
-				// if (email === testUser.email) {
-				// 	console.log("email matches");
-				// }
-
-				// if (password === testUser.password) {
-				// 	console.log("password matches");
-				// }
-
-				// const user =
-				// 	email === testUser.email && password === testUser.password
-				// 		? testUser
-				// 		: null;
-
-				// return user;
-
-				// Add logic here to look up the user from the credentials supplied
-				// Check credentials against your database or an external service
-				// made up testUser for now
-				// console.log("reaching authorize..");
-
-				// if (!email || !password) return null;
-				// // const user =
-				// // 	email === testUser.email && password === "password"
-				// // 		? testUser
-				// // 		: null;
-				// const user = testUser; // for debugging
-				// return user;
-				// You can also Reject this callback with an Error thus the user will be sent to the error pa
 			},
-			// async authorize(credentials) {
-			// 	const { email, password } = credentials || {};
-			// 	if (!email || !password) return null;
-
-			// 	const user = await db
-			// 		.select(users)
-			// 		.where(users.email.eq(email))
-			// 		.limit(1);
-
-			// 	if (!user || !bcrypt.compareSync(password, user[0].password)) {
-			// 		throw new Error("Invalid email or password");
-			// 	}
-
-			// 	return { id: user[0].id, email: user[0].email };
-			// },
 		}),
 	],
 	session: {

@@ -51,7 +51,6 @@ export const validate = (data: data) => {
 			data: data,
 			errors: fieldErrors,
 		};
-		console.log(response);
 		return response;
 	} else {
 		// Send response back with success and the data
