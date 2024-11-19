@@ -1,36 +1,38 @@
 {
-  "name": "auth-next-starter",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@auth/drizzle-adapter": "^1.7.4",
-    "@neondatabase/serverless": "^0.10.3",
-    "bcryptjs": "^2.4.3",
-    "drizzle-orm": "^0.36.3",
-    "next": "15.0.3",
-    "next-auth": "5.0.0-beta.25",
-    "npx": "^10.2.2",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "drizzle-kit": "^0.28.1",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.3",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+	"name": "auth-next-starter",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"push": "pnpm drizzle-kit push"
+	},
+	"dependencies": {
+		"@auth/drizzle-adapter": "^1.7.4",
+		"@faker-js/faker": "^9.2.0",
+		"@neondatabase/serverless": "^0.10.3",
+		"bcryptjs": "^2.4.3",
+		"drizzle-orm": "^0.36.3",
+		"next": "15.0.3",
+		"next-auth": "5.0.0-beta.25",
+		"npx": "^10.2.2",
+		"react": "19.0.0-rc-66855b96-20241106",
+		"react-dom": "19.0.0-rc-66855b96-20241106",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@types/bcrypt": "^5.0.2",
+		"@types/bcryptjs": "^2.4.6",
+		"@types/node": "^20",
+		"@types/react": "^18",
+		"@types/react-dom": "^18",
+		"drizzle-kit": "^0.28.1",
+		"eslint": "^8",
+		"eslint-config-next": "15.0.3",
+		"postcss": "^8",
+		"tailwindcss": "^3.4.1",
+		"typescript": "^5"
+	}
 }
