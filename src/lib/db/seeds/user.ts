@@ -16,6 +16,14 @@ const seedUsers = async (db: db) => {
 		spoofUserArray.push(spoofUser);
 	}
 
+	const pete = {
+		name: "pete",
+		email: "pkeen7@gmail.com",
+		password: await hashPassword("password"),
+		image: faker.image.avatar(),
+	};
+	spoofUserArray.push(pete);
+
 	try {
 		await db.insert(schema.users).values(spoofUserArray);
 		console.log("users succesfully seeded...");

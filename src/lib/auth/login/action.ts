@@ -27,6 +27,7 @@ export const login = async (previous: unknown, formData: FormData) => {
 				db: "Email or password incorrect",
 			},
 		};
+		console.log(result);
 		return result;
 	}
 };
