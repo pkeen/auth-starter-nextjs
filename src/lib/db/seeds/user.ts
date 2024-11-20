@@ -1,6 +1,7 @@
 import type { db } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
 import { faker } from "@faker-js/faker";
+import { hashPassword } from "@/utils/password";
 
 const seedUsers = async (db: db) => {
 	const spoofUserArray = [];
@@ -9,8 +10,8 @@ const seedUsers = async (db: db) => {
 		const spoofUser = {
 			name: faker.person.fullName(),
 			email: faker.internet.email(),
-			password: faker.internet.password(),
-            image: faker.image.avatar(),
+			password: await hashPassword(faker.internet.password()),
+			image: faker.image.avatar(),
 		};
 		spoofUserArray.push(spoofUser);
 	}

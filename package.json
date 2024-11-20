@@ -2,18 +2,21 @@
 	"name": "auth-next-starter",
 	"version": "0.1.0",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"push": "pnpm drizzle-kit push"
+		"push": "pnpm drizzle-kit push",
+		"seed": "NODE_ENV=development tsx ./src/lib/db/seed.ts"
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.7.4",
 		"@faker-js/faker": "^9.2.0",
 		"@neondatabase/serverless": "^0.10.3",
 		"bcryptjs": "^2.4.3",
+		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.36.3",
 		"next": "15.0.3",
 		"next-auth": "5.0.0-beta.25",
