@@ -1,6 +1,7 @@
 "use server";
 import { validate, response, data } from "./validate";
 import { signIn } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const login = async (previous: unknown, formData: FormData) => {
 	const data = Object.fromEntries(formData) as data;
@@ -14,11 +15,21 @@ export const login = async (previous: unknown, formData: FormData) => {
 
 	// SEND DATA TO AUTHORIZE FUNCTION DEFINED IN AUTH
 	try {
-		const user = await signIn("credentials", {
+		await signIn("credentials", {
+			// callbackUrl: "/", // Replace with your desired post-login URL
+			// redirectTo: "/",
 			redirect: false,
 			email: data.email,
 			password: data.password,
 		});
+		// console.log(user);
+		result = {
+			...result,
+			authorized: true,
+		};
+		// redirect("/");
+		console.log(result);
+		// return user;
 	} catch (err) {
 		result = {
 			...result,
@@ -30,4 +41,6 @@ export const login = async (previous: unknown, formData: FormData) => {
 		console.log(result);
 		return result;
 	}
+
+	redirect("/");
 };

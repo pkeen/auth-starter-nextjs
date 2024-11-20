@@ -104,9 +104,10 @@ const authConfig: NextAuthConfig = {
 						user.password as string
 					);
 					if (!isValid) {
+						console.log("Invalid password");
 						throw new Error("Invalid password");
 					}
-
+					isValid && console.log("User logged in successfully");
 					console.log("User logged in successfully");
 					return user;
 				} catch (error) {
@@ -145,16 +146,16 @@ const authConfig: NextAuthConfig = {
 	session: {
 		strategy: "jwt",
 	},
-	// callbacks: {
-	// 	async jwt({ token, user }) {
-	// 		if (user) token.id = user.id;
-	// 		return token;
-	// 	},
-	// 	async session({ session, token }) {
-	// 		session.user.id = token.id;
-	// 		return session;
-	// 	},
-	// },
+	callbacks: {
+		async jwt({ token, user }) {
+			if (user) token.id = user.id;
+			return token;
+		},
+		async session({ session, token }) {
+			session.user.id = token.id;
+			return session;
+		},
+	},
 	secret: process.env.AUTH_SECRET,
 };
 
